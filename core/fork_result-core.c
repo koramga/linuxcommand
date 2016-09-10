@@ -129,7 +129,11 @@ bool addForkResultStatus(pid_t pid, int status)
 
 bool pushForkResult(pid_t pid)
 {
-    queue_push(pid);
+    pid_t* heap_pid = (int*)malloc(sizeof(pid_t));
+
+    (*heap_pid) = pid;
+
+    queue_push(QUEID_FORK_RESULT, heap_pid);
 }
 
 bool delForkResult(pid_t pid)

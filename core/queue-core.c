@@ -1,56 +1,89 @@
 #include "queue-core.h"
 
-__queue_element__ __queue_elements__[MAX_QUEUE_SIZE];
-__queue_element__ __queue_front__ = 0;
-__queue_element__ __queue_rear__ = 0;
+__queue_element__ __queue_elements__[__QUEID_COUNT__][__MAX_QUEUE_SIZE__];
+int __queue_front__[__QUEID_COUNT__] = {0, };
+int __queue_rear__[__QUEID_COUNT__] = {0, };
 
-bool queue_full()
+bool __queue_existID__(int queID)
 {
-        if (((__queue_rear__ + 1) % MAX_QUEUE_SIZE) == __queue_front__)     //full
-                    return true;
+    if(queID >= __QUEID_COUNT__)
+        return false;
 
-            return false;
+    return true;
 }
 
-bool queue_empty()
+bool queue_full(int queID)
 {
-        if (__queue_rear__ == __queue_front__)
-                    return true;
+    if(__queue_existID__(queID))
+    {
+        if (((__queue_rear__[queID] + 1) % __MAX_QUEUE_SIZE__) == __queue_front__[queID])     //full
+            return true;
 
-            return false;
+        return false;
+    }
+
+    return false;
 }
 
-bool queue_push(__queue_element__ data)
+bool queue_empty(int queID)
 {
-        if (!queue_full())
-                {
-                            __queue_rear__ = (__queue_rear__ + 1) % MAX_QUEUE_SIZE;
-                                    __queue_elements__[__queue_rear__] = data;
-                                            return true;
-                                                }
+    if(__queue_existID__(queID))
+    {
+        if (__queue_rear__[queID] == __queue_front__[queID])
+            return true;
 
-            return false;
+        return false;
+    }
+
+    return false;
 }
 
-bool queue_pop()
+bool queue_push(int queID, __queue_element__ data)
 {
-        if (!queue_empty())
-                {
-                            __queue_front__ = (__queue_front__ + 1) % MAX_QUEUE_SIZE;
-                                    return true;
-                                        }
+    if(__queue_existID__(queID))
+    {
+        if (!queue_full(queID))
+        {
+            __queue_rear__[queID] = (__queue_rear__[queID] + 1) % __MAX_QUEUE_SIZE__;
+            __queue_elements__[queID][__queue_rear__[queID]] = data;
+            return true;
+        }
 
-            return false;
+        return false;
+    }
+
+    return false;
 }
 
-__queue_element__ queue_get()
+bool queue_pop(int queID)
 {
-        return __queue_elements__[(__queue_front__ + 1) % MAX_QUEUE_SIZE];
+    if(__queue_existID__(queID))
+    {
+        if (!queue_empty(queID))
+        {
+            __queue_front__[queID] = (__queue_front__[queID] + 1) % __MAX_QUEUE_SIZE__;
+            return true;
+        }
+
+        return false;
+    }
+
+    return false;
 }
 
-void queue_debug()
+__queue_element__ queue_get(int queID)
 {
-        for (int i = 0; i < MAX_QUEUE_SIZE; ++i)
-                    printf("%d\n", __queue_elements__[i]);
+    if(__queue_existID__(queID))
+    {
+        return __queue_elements__[queID][(__queue_front__[queID] + 1) % __MAX_QUEUE_SIZE__];
+    }
+
+    return 0;
+}
+
+void queue_debug(int queID)
+{
+    for (int i = 0; i < __MAX_QUEUE_SIZE__; ++i)
+        printf("%d\n", __queue_elements__[queID][i]);
 }
 

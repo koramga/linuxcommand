@@ -4,15 +4,21 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
-#define MAX_QUEUE_SIZE 10
 
-typedef pid_t __queue_element__;
+#define __MAX_QUEUE_SIZE__  10
+#define QUEID_FORK_RESULT       0
+#define QUEID_USER_INTERFACE    1
+#define __QUEID_COUNT__         2   
 
-bool queue_full();
-bool queue_empty();
-bool queue_push(__queue_element__ data);
-bool queue_pop();
-__queue_element__ queue_get();
-void queue_debug();
+typedef void* __queue_element__;
+
+bool __queue_existID__(int queID);
+
+bool queue_full(int queID);
+bool queue_empty(int queID);
+bool queue_push(int queID, __queue_element__ data);
+bool queue_pop(int queID);
+__queue_element__ queue_get(int queID);
+void queue_debug(int queID);
 
 #endif
