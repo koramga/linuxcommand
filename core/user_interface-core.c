@@ -48,11 +48,12 @@ bool readUser()
             }
         }
 
+        /*
         printf("========================\n");
         for(int i = 0; i < len; ++i)
             printf("%c", buf[i]);
         printf("========================\n");
-
+        */
         __makeUserInput__(buf, len);
 
         return true;

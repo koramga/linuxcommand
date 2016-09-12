@@ -54,6 +54,8 @@ bool initForkResult()
         __initForkResultValue__(i);
 
     atexit(__releaseForkResult__);
+
+    return true;
 }
 
 void __releaseForkResult__()

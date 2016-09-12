@@ -127,10 +127,12 @@ void __releaseExcuteFile__()
         safe_free_dptr(&__excuteFiles__[i]);
 }
 
-void initExcuteFile()
+bool initExcuteFile()
 {
     findExcuteFile("..");
     atexit(__releaseExcuteFile__);
+
+    return true;
 }
 
 /*

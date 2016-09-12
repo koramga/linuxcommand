@@ -16,7 +16,6 @@
 
 bool initialize();
 bool progress();
-void render();
 bool release();
 
 bool g_exit = false;
@@ -41,25 +40,49 @@ int main()
         release();
     }
 
-    else perror("init error");
+    else 
+        printf("initialize error\n");
 
     return 0;
 }
 
 bool initialize()
 {
-    if(initInterface())
+    bool ret;
+
+    ret = initInterface();
+
+    if(!ret)
     {
-        if(initSignal())
-        {
-            initForkResult();
-            initExcuteFile();
-//            printf("init succes\n");
-            return true;
-        }
+        renderErrorMessage();
+        return false;
     }
 
-    return false;
+    ret = initSignal();
+
+    if(!ret)
+    {
+        renderErrorMessage();
+        return false;
+    }
+    
+    ret = initForkResult();
+
+    if(!ret)
+    {
+        renderErrorMessage();
+        return false;
+    }
+
+    ret = initExcuteFile();
+
+    if(!ret)
+    {
+        renderErrorMessage();
+        return false;
+    }
+
+    return true;
 }
 
 bool progress()
@@ -77,25 +100,10 @@ bool progress()
 
     return returnValue;
 }
-/*
-void render()
-{
-    int i = 0;
 
-    for(i = 0; i < g_excuteFileIndex; ++i)
-        printf("%s\n", g_excuteFile[i]);
-}
-*/
 bool release()
 {
-    /*
-    int i = 0;
-
-    for(i = 0; i < g_excuteFileIndex; ++i)
-        free((void*)g_excuteFile[i]);
-
-    close(g_fd);
-    */
+   
 }
 
 bool syncFork(USER_INPUT* pUserInput)
@@ -238,14 +246,8 @@ void childSignal(int sig, siginfo_t* siginfo, void* context)
     {
         if(addForkResultStatus(siginfo->si_pid, siginfo->si_status))
         {
-            printf("add fork result\n");
+            //printf("add fork result\n");
             pushForkResult(siginfo->si_pid);
-//            queue_push(__findPIDIndex__(siginfo->si_pid));
-            /*
-               int index = __findPIDIndex__(siginfo->si_pid);
-               printf("%s\n", g_forkResult[index].command);
-               printf("%d, %d, %d\n", siginfo->si_pid, siginfo->si_status, siginfo->si_value); 
-            */
         }
 
     }
@@ -263,7 +265,7 @@ bool initSignal()
 
     if(sigaction(SIGCHLD, &act, NULL) < 0)
     {
-        perror("sigaction");
+        setError(ERR_CREATE, "main-core.c : initSignal Error");
         return false;
     }
 
@@ -308,7 +310,7 @@ void userInterfaceQueueCheck()
         USER_INPUT* pUserInput = (USER_INPUT*)queue_get(QUEID_USER_INTERFACE);
         queue_pop(QUEID_USER_INTERFACE);
 
-        printf("input\n");
+       // printf("input\n");
 
         if(strcmp(pUserInput->userInput[0], "quit") == 0)
         {

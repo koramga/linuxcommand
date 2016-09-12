@@ -16,7 +16,7 @@ bool __addExcuteFile__(const char* name);
 int __isExcuteFile__(const char* name);
 int __isDirectory__(const char* name);
 void findExcuteFile(const char* path);
-void initExcuteFile();
+bool initExcuteFile();
 void __releaseExcuteFile__();
 int getExcuteFileCount();
 const char* getExcuteFile(int index);
