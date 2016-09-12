@@ -49,5 +49,7 @@ bool progress(int argc, char* argv[])
     printf("minute : %d\n", tm->tm_min);
     printf("second : %d\n", tm->tm_sec);
 
+    printf("%s\n", asctime(tm));
+
     return true;
 }
